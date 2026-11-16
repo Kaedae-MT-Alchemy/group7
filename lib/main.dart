@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:html' as html;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'learning_hub.dart';
 import 'sitemap_screen.dart';
 import 'demo_login_screen.dart';
@@ -8,6 +11,7 @@ import 'register_screen.dart';
 import 'admin_portal.dart';
 import 'chatbot_widget.dart';
 import 'team_emotional_weather.dart';
+import 'auth_navigation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -78,313 +82,313 @@ class HomeScreen extends StatelessWidget {
       body: Stack(
         children: [
 
-      LayoutBuilder(
-        builder: (context, constraints) {
-          final mobile = constraints.maxWidth < 760;
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final mobile = constraints.maxWidth < 1100;
 
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // HEADER
-                SiteHeader(
-                  mobile: mobile,
-                  onNavigate: (page) => navigate(context, page),
-                ),
-
-                // HERO
-                Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    mobile ? 16 : 48,
-                    20,
-                    mobile ? 16 : 48,
-                    0,
-                  ),
-                  child: mobile
-                      ? const Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      HeroCopy(),
-                      SizedBox(height: 16),
-                      HeroArtwork(height: 300),
-                    ],
-                  )
-                      : const Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 5,
-                        child: HeroCopy(),
-                      ),
-                      SizedBox(width: 22),
-                      Expanded(
-                        flex: 4,
-                        child: HeroArtwork(height: 470),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 70),
-
-                // ALCHEMY CYCLE
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: mobile ? 20 : 65,
-                  ),
-                  child: const AlchemyCycle(),
-                ),
-
-                const SizedBox(height: 75),
-
-                // DEVELOPMENT PATHWAYS
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: mobile ? 20 : 65,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SectionHeading(
-                        eyebrow: 'FIND YOUR PATH',
-                        title: 'Growth looks different for everyone.',
-                        description:
-                        'Explore a pathway that meets you where you are '
-                            'and helps you move towards where you want to be.',
-                      ),
-                      const SizedBox(height: 28),
-                      LayoutBuilder(
-                        builder: (context, box) {
-                          final columns =
-                          box.maxWidth > 850 ? 3 : 1;
-
-                          return GridView.count(
-                            crossAxisCount: columns,
-                            shrinkWrap: true,
-                            physics:
-                            const NeverScrollableScrollPhysics(),
-                            crossAxisSpacing: 18,
-                            mainAxisSpacing: 18,
-                            childAspectRatio:
-                            columns == 3 ? 0.78 : (box.maxWidth < 500 ? 0.72 : 1.25),
-                            children: [
-                              PathwayCard(
-                                number: '01',
-                                icon: Icons.psychology_outlined,
-                                title: 'Understand yourself.',
-                                description:
-                                'Develop emotional intelligence, '
-                                    'self-awareness and mindful habits.',
-                                category: 'INDIVIDUAL GROWTH',
-                                color: lilac,
-                                imageUrl: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80',
-                                button: 'Explore learning',
-                                onTap: () =>
-                                    navigate(context, 'Upskilling'),
-                              ),
-                              PathwayCard(
-                                number: '02',
-                                icon: Icons.groups_2_outlined,
-                                title: 'Grow together.',
-                                description:
-                                'Build authentic leadership, trust '
-                                    'and stronger team relationships.',
-                                category: 'TEAM DEVELOPMENT',
-                                color: sage,
-                                imageUrl: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=900&q=80',
-                                button: 'Explore services',
-                                onTap: () =>
-                                    navigate(context, 'Services'),
-                              ),
-                              PathwayCard(
-                                number: '03',
-                                icon: Icons.auto_stories_outlined,
-                                title: 'Put growth into practice.',
-                                description:
-                                'Explore workbooks, journals and '
-                                    'resources for everyday learning.',
-                                category: 'PRACTICAL RESOURCES',
-                                color: gold,
-                                imageUrl: 'https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=900&q=80',
-                                button: 'Visit the store',
-                                onTap: () => navigate(context, 'Store'),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 75),
-
-                // IMPACT SECTION
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: mobile ? 16 : 48,
-                  ),
-                  child: Container(
-                    padding: EdgeInsets.all(mobile ? 25 : 48),
-                    decoration: BoxDecoration(
-                      color: navy,
-                      borderRadius: BorderRadius.circular(30),
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // HEADER
+                    SiteHeader(
+                      mobile: mobile,
+                      onNavigate: (page) => navigate(context, page),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'THE DIFFERENCE WE WANT TO MAKE',
-                          style: TextStyle(
-                            color: gold,
-                            fontSize: 11,
-                            letterSpacing: 2,
-                            fontWeight: FontWeight.bold,
+
+                    // HERO
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        mobile ? 16 : 48,
+                        20,
+                        mobile ? 16 : 48,
+                        0,
+                      ),
+                      child: mobile
+                          ? const Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          HeroCopy(),
+                          SizedBox(height: 16),
+                          HeroArtwork(height: 300),
+                        ],
+                      )
+                          : const Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 5,
+                            child: HeroCopy(),
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          'Personal growth should create collective change.',
-                          style: TextStyle(
-                            color: white,
-                            fontSize: mobile ? 32 : 46,
-                            fontWeight: FontWeight.w700,
-                            height: 1.15,
-                            letterSpacing: -1.4,
+                          SizedBox(width: 22),
+                          Expanded(
+                            flex: 4,
+                            child: HeroArtwork(height: 470),
                           ),
-                        ),
-                        const SizedBox(height: 18),
-                        const Text(
-                          'From individual insight to healthier teams, '
-                              'we believe meaningful development changes '
-                              'the way people work, connect and lead.',
-                          style: TextStyle(
-                            color: Color(0xFFDADCE7),
-                            fontSize: 15,
-                            height: 1.8,
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 70),
+
+                    // ALCHEMY CYCLE
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: mobile ? 20 : 65,
+                      ),
+                      child: const AlchemyCycle(),
+                    ),
+
+                    const SizedBox(height: 75),
+
+                    // DEVELOPMENT PATHWAYS
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: mobile ? 20 : 65,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SectionHeading(
+                            eyebrow: 'FIND YOUR PATH',
+                            title: 'Growth looks different for everyone.',
+                            description:
+                            'Explore a pathway that meets you where you are '
+                                'and helps you move towards where you want to be.',
                           ),
+                          const SizedBox(height: 28),
+                          LayoutBuilder(
+                            builder: (context, box) {
+                              final columns =
+                              box.maxWidth > 850 ? 3 : 1;
+
+                              return GridView.count(
+                                crossAxisCount: columns,
+                                shrinkWrap: true,
+                                physics:
+                                const NeverScrollableScrollPhysics(),
+                                crossAxisSpacing: 18,
+                                mainAxisSpacing: 18,
+                                childAspectRatio:
+                                columns == 3 ? 0.78 : (box.maxWidth < 500 ? 0.72 : 1.25),
+                                children: [
+                                  PathwayCard(
+                                    number: '01',
+                                    icon: Icons.psychology_outlined,
+                                    title: 'Understand yourself.',
+                                    description:
+                                    'Develop emotional intelligence, '
+                                        'self-awareness and mindful habits.',
+                                    category: 'INDIVIDUAL GROWTH',
+                                    color: lilac,
+                                    imageUrl: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80',
+                                    button: 'Explore learning',
+                                    onTap: () =>
+                                        navigate(context, 'Upskilling'),
+                                  ),
+                                  PathwayCard(
+                                    number: '02',
+                                    icon: Icons.groups_2_outlined,
+                                    title: 'Grow together.',
+                                    description:
+                                    'Build authentic leadership, trust '
+                                        'and stronger team relationships.',
+                                    category: 'TEAM DEVELOPMENT',
+                                    color: sage,
+                                    imageUrl: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=900&q=80',
+                                    button: 'Explore services',
+                                    onTap: () =>
+                                        navigate(context, 'Services'),
+                                  ),
+                                  PathwayCard(
+                                    number: '03',
+                                    icon: Icons.auto_stories_outlined,
+                                    title: 'Put growth into practice.',
+                                    description:
+                                    'Explore workbooks, journals and '
+                                        'resources for everyday learning.',
+                                    category: 'PRACTICAL RESOURCES',
+                                    color: gold,
+                                    imageUrl: 'https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=900&q=80',
+                                    button: 'Visit the store',
+                                    onTap: () => navigate(context, 'Store'),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 75),
+
+                    // IMPACT SECTION
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: mobile ? 16 : 48,
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.all(mobile ? 25 : 48),
+                        decoration: BoxDecoration(
+                          color: navy,
+                          borderRadius: BorderRadius.circular(30),
                         ),
-                        const SizedBox(height: 35),
-                        Wrap(
-                          spacing: 35,
-                          runSpacing: 25,
-                          children: const [
-                            ImpactStat(
-                              value: '1,100+',
-                              label: 'Participants impacted',
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'THE DIFFERENCE WE WANT TO MAKE',
+                              style: TextStyle(
+                                color: gold,
+                                fontSize: 11,
+                                letterSpacing: 2,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            ImpactStat(
-                              value: '120+',
-                              label: 'Organisations',
+                            const SizedBox(height: 20),
+                            Text(
+                              'Personal growth should create collective change.',
+                              style: TextStyle(
+                                color: white,
+                                fontSize: mobile ? 32 : 46,
+                                fontWeight: FontWeight.w700,
+                                height: 1.15,
+                                letterSpacing: -1.4,
+                              ),
                             ),
-                            ImpactStat(
-                              value: '95%',
-                              label: 'Positive feedback',
+                            const SizedBox(height: 18),
+                            const Text(
+                              'From individual insight to healthier teams, '
+                                  'we believe meaningful development changes '
+                                  'the way people work, connect and lead.',
+                              style: TextStyle(
+                                color: Color(0xFFDADCE7),
+                                fontSize: 15,
+                                height: 1.8,
+                              ),
+                            ),
+                            const SizedBox(height: 35),
+                            Wrap(
+                              spacing: 35,
+                              runSpacing: 25,
+                              children: const [
+                                ImpactStat(
+                                  value: '1,100+',
+                                  label: 'Participants impacted',
+                                ),
+                                ImpactStat(
+                                  value: '120+',
+                                  label: 'Organisations',
+                                ),
+                                ImpactStat(
+                                  value: '95%',
+                                  label: 'Positive feedback',
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
 
-                const SizedBox(height: 70),
+                    const SizedBox(height: 70),
 
-                // EMPLOYER CALL TO ACTION
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: mobile ? 20 : 65,
-                  ),
-                  child: Container(
-                    padding: EdgeInsets.all(mobile ? 25 : 40),
-                    decoration: BoxDecoration(
-                      color: lilac,
-                      borderRadius: BorderRadius.circular(28),
-                    ),
-                    child: mobile
-                        ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const EmployerCopy(),
-                        const SizedBox(height: 25),
-                        EmployerButton(
-                          onTap: () =>
-                              navigate(context, 'Employers'),
+                    // EMPLOYER CALL TO ACTION
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: mobile ? 20 : 65,
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.all(mobile ? 25 : 40),
+                        decoration: BoxDecoration(
+                          color: lilac,
+                          borderRadius: BorderRadius.circular(28),
                         ),
-                      ],
-                    )
-                        : Row(
-                      children: [
-                        const Expanded(child: EmployerCopy()),
-                        const SizedBox(width: 25),
-                        EmployerButton(
-                          onTap: () =>
-                              navigate(context, 'Employers'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 65),
-
-                // FOOTER
-                Container(
-                  color: const Color(0xFFE9E3D8),
-                  padding: EdgeInsets.all(mobile ? 24 : 48),
-                  child: Wrap(
-                    alignment: WrapAlignment.spaceBetween,
-                    runSpacing: 20,
-                    children: [
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'MT / ALCHEMY',
-                            style: TextStyle(
-                              color: navy,
-                              fontSize: 21,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: 1.2,
+                        child: mobile
+                            ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const EmployerCopy(),
+                            const SizedBox(height: 25),
+                            EmployerButton(
+                              onTap: () =>
+                                  navigate(context, 'Employers'),
                             ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'A studio for human potential.',
-                            style: TextStyle(color: muted),
-                          ),
-                        ],
+                          ],
+                        )
+                            : Row(
+                          children: [
+                            const Expanded(child: EmployerCopy()),
+                            const SizedBox(width: 25),
+                            EmployerButton(
+                              onTap: () =>
+                                  navigate(context, 'Employers'),
+                            ),
+                          ],
+                        ),
                       ),
-                      Wrap(
-                        spacing: 8,
+                    ),
+
+                    const SizedBox(height: 65),
+
+                    // FOOTER
+                    Container(
+                      color: const Color(0xFFE9E3D8),
+                      padding: EdgeInsets.all(mobile ? 24 : 48),
+                      child: Wrap(
+                        alignment: WrapAlignment.spaceBetween,
+                        runSpacing: 20,
                         children: [
-                          TextButton(
-                            onPressed: () =>
-                                navigate(context, 'About'),
-                            child: const Text('About'),
+                          const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'MT / ALCHEMY',
+                                style: TextStyle(
+                                  color: navy,
+                                  fontSize: 21,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: 1.2,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                'A studio for human potential.',
+                                style: TextStyle(color: muted),
+                              ),
+                            ],
                           ),
-                          TextButton(
-                            onPressed: () =>
-                                navigate(context, 'Contact'),
-                            child: const Text('Contact'),
-                          ),
-                          TextButton(
-                            onPressed: () =>
-                                navigate(context, 'Login'),
-                            child: const Text('Learning login'),
+                          Wrap(
+                            spacing: 8,
+                            children: [
+                              TextButton(
+                                onPressed: () =>
+                                    navigate(context, 'About'),
+                                child: const Text('About'),
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    navigate(context, 'Contact'),
+                                child: const Text('Contact'),
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    navigate(context, 'Login'),
+                                child: const Text('Learning login'),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          );
-        },
-      ),
-    const ChatbotWidget(),
-    ],
+              );
+            },
+          ),
+          const ChatbotWidget(),
+        ],
       ),
 
     );
@@ -396,6 +400,7 @@ class HomeScreen extends StatelessWidget {
 // 3. HEADER AND NAVIGATION
 // ============================================================
 
+
 class SiteHeader extends StatelessWidget {
   final bool mobile;
   final ValueChanged<String> onNavigate;
@@ -406,114 +411,438 @@ class SiteHeader extends StatelessWidget {
     required this.onNavigate,
   });
 
+  final List<String> links = const [
+    'About',
+    'Services',
+    'Store',
+    'Contact',
+  ];
+
+  Future<String?> _currentUserRole() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return null;
+    try {
+      final profile = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      return profile.data()?['role']?.toString();
+    } catch (e) {
+      debugPrint('Unable to load account role: $e');
+      return null;
+    }
+  }
+
+  String _destinationForRole(String? role) {
+    switch (role?.toLowerCase()) {
+      case 'employer':
+        return 'Employers';
+      case 'admin':
+      case 'super admin':
+        return 'Admin Portal';
+      default:
+        return 'Learning Hub';
+    }
+  }
+
+  String _labelForRole(String? role) {
+    switch (role?.toLowerCase()) {
+      case 'employer':
+        return 'Employer Portal';
+      case 'admin':
+      case 'super admin':
+        return 'Admin Portal';
+      default:
+        return 'Learning Hub';
+    }
+  }
+
+  IconData _iconForRole(String? role) {
+    switch (role?.toLowerCase()) {
+      case 'employer':
+        return Icons.business_center_outlined;
+      case 'admin':
+      case 'super admin':
+        return Icons.admin_panel_settings_outlined;
+      default:
+        return Icons.school_outlined;
+    }
+  }
+
+  void _openNavigationDrawer(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'Navigation menu',
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 250),
+      pageBuilder: (dialogContext, animation, secondaryAnimation) {
+        return SafeArea(
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Material(
+              color: oat,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 360),
+                child: SizedBox(
+                  width: MediaQuery.sizeOf(dialogContext).width * 0.86,
+                  height: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // DRAWER HEADER
+                      Padding(
+                        padding: const EdgeInsets.all(22),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.auto_awesome,
+                              color: purple,
+                              size: 30,
+                            ),
+                            const SizedBox(width: 12),
+                            const Expanded(
+                              child: Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'MT / ALCHEMY',
+                                    style: TextStyle(
+                                      color: navy,
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.w800,
+                                      letterSpacing: 0.8,
+                                    ),
+                                  ),
+                                  Text(
+                                    'A STUDIO FOR HUMAN POTENTIAL',
+                                    style: TextStyle(
+                                      color: muted,
+                                      fontSize: 8,
+                                      letterSpacing: 1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () =>
+                                  Navigator.pop(dialogContext),
+                              icon: const Icon(
+                                Icons.close,
+                                color: navy,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const Divider(color: Color(0xFFE2DDD4)),
+
+                      // NAVIGATION LINKS
+                      Expanded(
+                        child: ListView(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 12,
+                          ),
+                          children: [
+                            for (final link in [
+                              'About',
+                              'Services',
+                              'Store',
+                              'Contact',
+                              'Sitemap',
+                            ])
+                              ListTile(
+                                leading: Icon(
+                                  _getNavigationIcon(link),
+                                  color: purple,
+                                ),
+                                title: Text(
+                                  link,
+                                  style: const TextStyle(
+                                    color: navy,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                trailing: const Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 14,
+                                  color: muted,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                onTap: () {
+                                  Navigator.pop(dialogContext);
+                                  onNavigate(link);
+                                },
+                              ),
+                          ],
+                        ),
+                      ),
+
+                      // ACCOUNT ACTIONS
+                      FutureBuilder<String?>(
+                        future: _currentUserRole(),
+                        builder: (context, snapshot) {
+                          final user = FirebaseAuth.instance.currentUser;
+                          final role = snapshot.data;
+                          return Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                if (user != null) ...[
+                                  FilledButton.tonalIcon(
+                                    onPressed: () {
+                                      Navigator.pop(dialogContext);
+                                      onNavigate(_destinationForRole(role));
+                                    },
+                                    icon: Icon(_iconForRole(role)),
+                                    label: Text(_labelForRole(role)),
+                                  ),
+                                  if (role?.toLowerCase() == 'employer') ...[
+                                    const SizedBox(height: 10),
+                                    OutlinedButton.icon(
+                                      onPressed: () async {
+                                        Navigator.pop(dialogContext);
+                                        await confirmAndSignOut(context);
+                                      },
+                                      icon: const Icon(Icons.logout),
+                                      label: const Text('Sign out'),
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: navy,
+                                      ),
+                                    ),
+                                  ],
+                                  const SizedBox(height: 12),
+                                ],
+                                if (user == null) ...[
+                                  OutlinedButton.icon(
+                                    onPressed: () {
+                                      Navigator.pop(dialogContext);
+                                      onNavigate('Login');
+                                    },
+                                    icon: const Icon(Icons.login),
+                                    label: const Text('Sign in'),
+                                    style: OutlinedButton.styleFrom(
+                                      foregroundColor: navy,
+                                      padding: const EdgeInsets.symmetric(vertical: 16),
+                                      side: const BorderSide(color: navy),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                ],
+                                FilledButton.icon(
+                                  onPressed: () {
+                                    Navigator.pop(dialogContext);
+                                    onNavigate('Register');
+                                  },
+                                  icon: const Icon(Icons.arrow_forward),
+                                  label: const Text('Get started'),
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: navy,
+                                    foregroundColor: white,
+                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final slide = Tween<Offset>(
+          begin: const Offset(-1, 0),
+          end: Offset.zero,
+        ).animate(
+          CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOutCubic,
+          ),
+        );
+
+        return SlideTransition(
+          position: slide,
+          child: child,
+        );
+      },
+    );
+  }
+
+  IconData _getNavigationIcon(String link) {
+    switch (link) {
+      case 'About':
+        return Icons.info_outline;
+      case 'Services':
+        return Icons.groups_outlined;
+      case 'Store':
+        return Icons.shopping_bag_outlined;
+      case 'Contact':
+        return Icons.mail_outline;
+      case 'Sitemap':
+        return Icons.account_tree_outlined;
+      default:
+        return Icons.circle_outlined;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final links = [
-      'About',
-      'Services',
-      'Upskilling',
-      'Store',
-      'Insights',
-      'Contact',
-    ];
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Switch to compact navigation when horizontal space is limited.
+        final compact = mobile || constraints.maxWidth < 1400;
 
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: mobile ? 20 : 48,
-        vertical: 18,
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.auto_awesome,
-            color: purple,
-            size: 29,
+        return Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: compact ? 20 : 48,
+            vertical: 18,
           ),
-          const SizedBox(width: 10),
-          const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Text(
-                'MT / ALCHEMY',
-                style: TextStyle(
+              // ALWAYS VISIBLE NAVIGATION MENU
+              IconButton(
+                tooltip: 'Open navigation menu',
+                onPressed: () => _openNavigationDrawer(context),
+                icon: const Icon(
+                  Icons.menu,
                   color: navy,
-                  fontSize: 19,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 0.8,
+                  size: 27,
                 ),
               ),
-              Text(
-                'A STUDIO FOR HUMAN POTENTIAL',
-                style: TextStyle(
-                  color: muted,
-                  fontSize: 8,
-                  letterSpacing: 1,
+
+              const SizedBox(width: 8),
+
+              const Icon(
+                Icons.auto_awesome,
+                color: purple,
+                size: 29,
+              ),
+              const SizedBox(width: 10),
+
+              const Expanded(
+                flex: 0,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'MT / ALCHEMY',
+                      style: TextStyle(
+                        color: navy,
+                        fontSize: 19,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.8,
+                      ),
+                    ),
+                    Text(
+                      'A STUDIO FOR HUMAN POTENTIAL',
+                      style: TextStyle(
+                        color: muted,
+                        fontSize: 8,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                  ],
                 ),
               ),
+
+              const Spacer(),
+
+              if (!compact) ...[
+                ...links.map(
+                      (link) => TextButton(
+                    onPressed: () => onNavigate(link),
+                    child: Text(
+                      link,
+                      style: const TextStyle(
+                        color: ink,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                ),
+
+                TextButton(
+                  onPressed: () => onNavigate('Sitemap'),
+                  child: const Text('Sitemap'),
+                ),
+              ],
+
+              if (FirebaseAuth.instance.currentUser != null)
+                FutureBuilder<String?>(
+                  future: _currentUserRole(),
+                  builder: (context, snapshot) {
+                    final role = snapshot.data;
+                    return TextButton.icon(
+                      onPressed: snapshot.connectionState == ConnectionState.waiting
+                          ? null
+                          : () => onNavigate(_destinationForRole(role)),
+                      icon: Icon(_iconForRole(role), size: 18),
+                      label: Text(_labelForRole(role)),
+                      style: TextButton.styleFrom(foregroundColor: navy),
+                    );
+                  },
+                ),
+              if (FirebaseAuth.instance.currentUser != null)
+                FutureBuilder<String?>(
+                  future: _currentUserRole(),
+                  builder: (context, snapshot) {
+                    if (snapshot.data?.toLowerCase() != 'employer') {
+                      return const SizedBox.shrink();
+                    }
+                    return TextButton.icon(
+                      onPressed: () => confirmAndSignOut(context),
+                      icon: const Icon(Icons.logout, size: 18),
+                      label: const Text('Sign out'),
+                      style: TextButton.styleFrom(foregroundColor: navy),
+                    );
+                  },
+                ),
+
+              IconButton(
+                tooltip: 'Open cart',
+                onPressed: () => onNavigate('Cart'),
+                icon: const Icon(
+                  Icons.shopping_bag_outlined,
+                  color: navy,
+                  size: 25,
+                ),
+              ),
+
+              if (!compact) ...[
+                const SizedBox(width: 8),
+                if (FirebaseAuth.instance.currentUser == null) ...[
+                  OutlinedButton(
+                    onPressed: () => onNavigate('Login'),
+                    child: const Text('Sign in'),
+                  ),
+                  const SizedBox(width: 8),
+                ],
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: navy,
+                    foregroundColor: white,
+                  ),
+                  onPressed: () => onNavigate('Register'),
+                  child: const Text('Get started ↗'),
+                ),
+              ],
             ],
           ),
-          const Spacer(),
-          if (!mobile)
-            ...links.map(
-                  (link) => TextButton(
-                onPressed: () => onNavigate(link),
-                child: Text(
-                  link,
-                  style: const TextStyle(
-                    color: ink,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-            ),
-          if (mobile)
-            PopupMenuButton<String>(
-              icon: const Icon(Icons.menu, color: navy),
-              onSelected: onNavigate,
-              itemBuilder: (context) => [
-                for (final link in [
-                  ...links,
-                  'Employers',
-                  'Cart',
-                  'Login',
-                  'Register',
-                ])
-                  PopupMenuItem(
-                    value: link,
-                    child: Text(link),
-                  ),
-              ],
-            )
-          else ...[
-            const SizedBox(width: 4),
-            TextButton(
-              onPressed: () => onNavigate('Sitemap'),
-              child: const Text('Sitemap'),
-            ),
-            IconButton(
-              tooltip: 'Open cart',
-              onPressed: () => onNavigate('Cart'),
-              icon: const Icon(Icons.shopping_bag_outlined, color: navy),
-            ),
-            const SizedBox(width: 4),
-
-            OutlinedButton(
-              onPressed: () => onNavigate('Login'),
-              child: const Text('Sign in'),
-            ),
-
-            const SizedBox(width: 8),
-            FilledButton(
-              style: FilledButton.styleFrom(
-                backgroundColor: navy,
-                foregroundColor: white,
-              ),
-              onPressed: () => onNavigate('Register'),
-              child: const Text('Get started ↗'),
-            ),
-          ],
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -1135,6 +1464,30 @@ const shopProducts = <ShopProduct>[
     imageUrl: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=900&q=80',
     type: 'TEAM RESOURCE',
   ),
+  ShopProduct(
+    id: 'printed_journal',
+    name: 'Printed Reflection Journal',
+    description: 'A beautifully printed journal with guided prompts for self-awareness and everyday reflection.',
+    price: 49.00,
+    imageUrl: 'https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=900&q=80',
+    type: 'PHYSICAL PRODUCT',
+  ),
+  ShopProduct(
+    id: 'printed_leadership',
+    name: 'Printed Leadership Workbook',
+    description: 'A printed workbook of practical exercises for intentional, people-centred leadership.',
+    price: 59.00,
+    imageUrl: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=900&q=80',
+    type: 'PHYSICAL PRODUCT',
+  ),
+  ShopProduct(
+    id: 'physical_team_cards',
+    name: 'Team Reflection Cards – Printed Set',
+    description: 'A physical card set for facilitating group discussion, reflection and team learning.',
+    price: 45.00,
+    imageUrl: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=900&q=80',
+    type: 'PHYSICAL PRODUCT',
+  ),
 ];
 
 class CartLine {
@@ -1162,19 +1515,74 @@ void addProductToCart(ShopProduct product) {
   refreshSampleCartCount();
 }
 
-class StoreScreen extends StatelessWidget {
+class StoreScreen extends StatefulWidget {
   const StoreScreen({super.key});
 
   @override
+  State<StoreScreen> createState() => _StoreScreenState();
+}
+
+class _StoreScreenState extends State<StoreScreen> {
+  String _selectedFilter = 'ALL';
+
+  @override
   Widget build(BuildContext context) {
+    final digitalProducts = shopProducts
+        .where((product) => product.type != 'PHYSICAL PRODUCT')
+        .toList();
+    final physicalProducts = shopProducts
+        .where((product) => product.type == 'PHYSICAL PRODUCT')
+        .toList();
+
     return Scaffold(
       backgroundColor: oat,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: oat,
         foregroundColor: navy,
         elevation: 0,
         title: const Text('THE ALCHEMY STORE'),
+        leading: IconButton(
+          tooltip: 'Return to Home',
+          icon: const Icon(Icons.home_outlined),
+          onPressed: () {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            } else {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const HomeScreen()),
+              );
+            }
+          },
+        ),
         actions: [
+          TextButton.icon(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const MyDigitalProductsScreen(),
+              ),
+            ),
+            icon: const Icon(Icons.download_outlined),
+            label: const Text('My Digital Products'),
+          ),
+          if (FirebaseAuth.instance.currentUser != null)
+            TextButton.icon(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const MyPhysicalOrdersScreen(),
+                ),
+              ),
+              icon: const Icon(Icons.local_shipping_outlined),
+              label: const Text('My Physical Orders'),
+            ),
+          if (FirebaseAuth.instance.currentUser != null)
+            IconButton(
+              tooltip: 'Sign out',
+              onPressed: () => confirmAndSignOut(context),
+              icon: const Icon(Icons.logout),
+            ),
           ValueListenableBuilder<int>(
             valueListenable: sampleCartCount,
             builder: (context, count, _) => Padding(
@@ -1255,28 +1663,78 @@ class StoreScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 20),
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    final columns = constraints.maxWidth >= 850
-                        ? 3
-                        : constraints.maxWidth >= 540
-                        ? 2
-                        : 1;
-                    final width =
-                        (constraints.maxWidth - (columns - 1) * 18) / columns;
-                    return Wrap(
-                      spacing: 18,
-                      runSpacing: 18,
-                      children: shopProducts.map((product) {
-                        return SizedBox(
-                          width: width,
-                          child: _StoreProductCard(product: product),
-                        );
-                      }).toList(),
-                    );
-                  },
+                const SizedBox(height: 18),
+                Row(
+                  children: [
+                    const Icon(Icons.filter_list, color: navy),
+                    const SizedBox(width: 8),
+                    const Text(
+                      'Filter products',
+                      style: TextStyle(
+                        color: navy,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    PopupMenuButton<String>(
+                      tooltip: 'Filter by product type',
+                      initialValue: _selectedFilter,
+                      onSelected: (value) {
+                        setState(() => _selectedFilter = value);
+                      },
+                      itemBuilder: (context) => const [
+                        PopupMenuItem(value: 'ALL', child: Text('All products')),
+                        PopupMenuItem(value: 'DIGITAL', child: Text('Digital products')),
+                        PopupMenuItem(value: 'PHYSICAL', child: Text('Physical products')),
+                      ],
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 11,
+                        ),
+                        decoration: BoxDecoration(
+                          color: lilac,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: purple.withOpacity(0.25)),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              _selectedFilter == 'ALL'
+                                  ? 'All products'
+                                  : _selectedFilter == 'DIGITAL'
+                                  ? 'Digital products'
+                                  : 'Physical products',
+                              style: const TextStyle(
+                                color: navy,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Icon(Icons.keyboard_arrow_down, color: navy),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+                const SizedBox(height: 24),
+                if (_selectedFilter == 'ALL' || _selectedFilter == 'DIGITAL')
+                  _StoreProductSection(
+                    title: 'DIGITAL PRODUCTS',
+                    subtitle: 'Instant-access workbooks, toolkits and downloadable resources.',
+                    icon: Icons.download_for_offline_outlined,
+                    products: digitalProducts,
+                  ),
+                if (_selectedFilter == 'ALL') const SizedBox(height: 30),
+                if (_selectedFilter == 'ALL' || _selectedFilter == 'PHYSICAL')
+                  _StoreProductSection(
+                    title: 'PHYSICAL PRODUCTS',
+                    subtitle: 'Printed journals, workbooks and card sets delivered to your address.',
+                    icon: Icons.local_shipping_outlined,
+                    products: physicalProducts,
+                  ),
                 const SizedBox(height: 22),
                 const Text(
                   'Prototype store: products and prices are illustrative. No payment is processed.',
@@ -1287,6 +1745,87 @@ class StoreScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _StoreProductSection extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final List<ShopProduct> products;
+
+  const _StoreProductSection({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.products,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: lilac,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: navy),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: purple,
+                      fontSize: 12,
+                      letterSpacing: 1.8,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(color: muted, height: 1.4),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final columns = constraints.maxWidth >= 850
+                ? 3
+                : constraints.maxWidth >= 540
+                ? 2
+                : 1;
+            final width =
+                (constraints.maxWidth - (columns - 1) * 18) / columns;
+            return Wrap(
+              spacing: 18,
+              runSpacing: 18,
+              children: products.map((product) {
+                return SizedBox(
+                  width: width,
+                  child: _StoreProductCard(product: product),
+                );
+              }).toList(),
+            );
+          },
+        ),
+      ],
     );
   }
 }
@@ -1395,6 +1934,651 @@ class _StoreProductCard extends StatelessWidget {
   }
 }
 
+
+// ============================================================
+// 11B. MY PHYSICAL ORDERS AND DELIVERY STATUS
+// ============================================================
+
+class MyPhysicalOrdersScreen extends StatelessWidget {
+  const MyPhysicalOrdersScreen({super.key});
+
+  String _formatDate(dynamic value) {
+    if (value is Timestamp) {
+      final date = value.toDate();
+      return '${date.day.toString().padLeft(2, '0')}/'
+          '${date.month.toString().padLeft(2, '0')}/'
+          '${date.year}';
+    }
+    return 'Date unavailable';
+  }
+
+  Color _statusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'delivered':
+        return const Color(0xFF3D7954);
+      case 'shipped':
+        return const Color(0xFF9A6A16);
+      default:
+        return purple;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
+    return Scaffold(
+      backgroundColor: oat,
+      appBar: AppBar(
+        backgroundColor: oat,
+        foregroundColor: navy,
+        elevation: 0,
+        title: const Text('MY PHYSICAL ORDERS'),
+        actions: [
+          IconButton(
+            tooltip: 'Sign out',
+            onPressed: user == null ? null : () => confirmAndSignOut(context),
+            icon: const Icon(Icons.logout),
+          ),
+        ],
+      ),
+      body: user == null
+          ? const Center(
+        child: Padding(
+          padding: EdgeInsets.all(24),
+          child: Text(
+            'Please sign in to view your physical orders.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: navy, fontSize: 16),
+          ),
+        ),
+      )
+          : StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .collection('physicalOrders')
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Text(
+                  'Unable to load your physical orders. ${snapshot.error}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: navy),
+                ),
+              ),
+            );
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(color: purple),
+            );
+          }
+
+          final orders = [...?snapshot.data?.docs];
+          orders.sort((a, b) {
+            final aDate = a.data()['createdAt'];
+            final bDate = b.data()['createdAt'];
+            final aMillis = aDate is Timestamp
+                ? aDate.millisecondsSinceEpoch
+                : 0;
+            final bMillis = bDate is Timestamp
+                ? bDate.millisecondsSinceEpoch
+                : 0;
+            return bMillis.compareTo(aMillis);
+          });
+
+          if (orders.isEmpty) {
+            return Center(
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 520),
+                margin: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(32),
+                decoration: BoxDecoration(
+                  color: white,
+                  borderRadius: BorderRadius.circular(22),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.local_shipping_outlined,
+                      size: 58,
+                      color: purple,
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'No physical orders yet.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: navy,
+                        fontSize: 23,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Physical products you purchase will appear here, '
+                          'along with their delivery status.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: muted, height: 1.5),
+                    ),
+                    const SizedBox(height: 20),
+                    FilledButton.icon(
+                      style: FilledButton.styleFrom(
+                        backgroundColor: navy,
+                        foregroundColor: white,
+                      ),
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const StoreScreen(),
+                        ),
+                      ),
+                      icon: const Icon(Icons.storefront_outlined),
+                      label: const Text('Explore the Store'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1000),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'YOUR PURCHASES',
+                      style: TextStyle(
+                        color: purple,
+                        fontSize: 11,
+                        letterSpacing: 2,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Track your deliveries.',
+                      style: TextStyle(
+                        color: navy,
+                        fontSize: 29,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Your physical orders and their latest delivery '
+                          'statuses are shown below.',
+                      style: TextStyle(color: muted, height: 1.5),
+                    ),
+                    const SizedBox(height: 22),
+                    ...orders.map((orderDoc) {
+                      final order = orderDoc.data();
+                      final rawItems = order['items'];
+                      final items = rawItems is List ? rawItems : <dynamic>[];
+                      final deliveryStatus =
+                      (order['deliveryStatus'] ??
+                          order['orderStatus'] ??
+                          'processing')
+                          .toString()
+                          .toLowerCase();
+                      final addressRaw = order['shippingAddress'];
+                      final address = addressRaw is Map
+                          ? Map<String, dynamic>.from(addressRaw)
+                          : <String, dynamic>{};
+                      final addressText = [
+                        address['address'],
+                        address['city'],
+                        address['state'],
+                        address['postcode'],
+                        address['country'],
+                      ]
+                          .where((part) =>
+                      part != null &&
+                          part.toString().trim().isNotEmpty)
+                          .join(', ');
+                      final total = (order['total'] as num?)?.toDouble() ??
+                          (order['subtotal'] as num?)?.toDouble() ??
+                          0.0;
+                      final orderId =
+                      (order['orderId'] ?? orderDoc.id).toString();
+
+                      return Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.only(bottom: 16),
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: white,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: const Color(0xFFE5DFD5),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Wrap(
+                              alignment: WrapAlignment.spaceBetween,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              runSpacing: 10,
+                              children: [
+                                Column(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'ORDER',
+                                      style: TextStyle(
+                                        color: muted,
+                                        fontSize: 10,
+                                        letterSpacing: 1.4,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 3),
+                                    Text(
+                                      orderId,
+                                      style: const TextStyle(
+                                        color: navy,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'Placed: ${_formatDate(order['createdAt'])}',
+                                      style: const TextStyle(
+                                        color: muted,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 13,
+                                    vertical: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: _statusColor(deliveryStatus)
+                                        .withValues(alpha: 0.12),
+                                    borderRadius:
+                                    BorderRadius.circular(30),
+                                  ),
+                                  child: Text(
+                                    deliveryStatus.toUpperCase(),
+                                    style: TextStyle(
+                                      color: _statusColor(deliveryStatus),
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.8,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Divider(height: 28),
+                            const Text(
+                              'ITEMS',
+                              style: TextStyle(
+                                color: purple,
+                                fontSize: 10,
+                                letterSpacing: 1.4,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            ...items.map((rawItem) {
+                              if (rawItem is! Map) {
+                                return const SizedBox.shrink();
+                              }
+                              final item =
+                              Map<String, dynamic>.from(rawItem);
+                              final name =
+                              (item['productName'] ?? 'Product')
+                                  .toString();
+                              final quantity =
+                                  (item['quantity'] as num?)?.toInt() ?? 1;
+                              final lineTotal =
+                                  (item['lineTotal'] as num?)?.toDouble() ??
+                                      0.0;
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 7),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        '$name × $quantity',
+                                        style: const TextStyle(
+                                          color: navy,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      'RM ${lineTotal.toStringAsFixed(2)}',
+                                      style: const TextStyle(
+                                        color: navy,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }),
+                            const Divider(height: 24),
+                            Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Order total',
+                                  style: TextStyle(
+                                    color: navy,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  'RM ${total.toStringAsFixed(2)}',
+                                  style: const TextStyle(
+                                    color: navy,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            if (addressText.isNotEmpty) ...[
+                              const SizedBox(height: 16),
+                              const Text(
+                                'DELIVERY ADDRESS',
+                                style: TextStyle(
+                                  color: purple,
+                                  fontSize: 10,
+                                  letterSpacing: 1.4,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                addressText,
+                                style: const TextStyle(
+                                  color: muted,
+                                  height: 1.5,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      );
+                    }),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+
+// ============================================================
+// 11A. MY DIGITAL PRODUCTS
+// ============================================================
+
+class MyDigitalProductsScreen extends StatelessWidget {
+  const MyDigitalProductsScreen({super.key});
+
+  static const Map<String, String> _downloadFiles = {
+    'journal': 'digital_journal_sample.pdf',
+    'leadership': 'leadership_guide_sample.pdf',
+    'conversation': 'conversation_skills_sample.pdf',
+    'team': 'team_building_activities_sample.pdf',
+  };
+
+  void _downloadProduct(BuildContext context, String productId) {
+    final fileName = _downloadFiles[productId];
+    if (fileName == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('A download file is not available for this product yet.')),
+      );
+      return;
+    }
+
+    // Uri.base.resolve keeps the GitHub Pages repository sub-path intact.
+    final downloadUrl = Uri.base.resolve('downloads/$fileName').toString();
+    html.AnchorElement(href: downloadUrl)
+      ..download = fileName
+      ..target = '_blank'
+      ..click();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
+    return Scaffold(
+      backgroundColor: oat,
+      appBar: AppBar(
+        backgroundColor: oat,
+        foregroundColor: navy,
+        elevation: 0,
+        title: const Text('MY DIGITAL PRODUCTS'),
+        actions: [
+          if (user != null)
+            IconButton(
+              tooltip: 'Sign out',
+              onPressed: () => confirmAndSignOut(context),
+              icon: const Icon(Icons.logout),
+            ),
+        ],
+      ),
+      body: user == null
+          ? const Center(
+        child: Padding(
+          padding: EdgeInsets.all(24),
+          child: Text(
+            'Please sign in to view your purchased digital products.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: navy, fontSize: 16),
+          ),
+        ),
+      )
+          : StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .collection('digitalOrders')
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Text(
+                  'Unable to load your purchases. ${snapshot.error}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: navy),
+                ),
+              ),
+            );
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(color: purple),
+            );
+          }
+
+          final purchasedItems = <Map<String, dynamic>>[];
+          for (final orderDoc in snapshot.data?.docs ?? []) {
+            final order = orderDoc.data();
+            if (order['orderType'] != 'digital' ||
+                order['paymentStatus'] != 'demo_completed' ||
+                order['orderStatus'] != 'completed') {
+              continue;
+            }
+
+            final items = order['items'];
+            if (items is! List) continue;
+
+            for (final rawItem in items) {
+              if (rawItem is! Map) continue;
+              purchasedItems.add({
+                ...Map<String, dynamic>.from(rawItem),
+                'orderId': order['orderId'] ?? orderDoc.id,
+                'createdAt': order['createdAt'],
+              });
+            }
+          }
+
+          if (purchasedItems.isEmpty) {
+            return Center(
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 520),
+                margin: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(32),
+                decoration: BoxDecoration(
+                  color: white,
+                  borderRadius: BorderRadius.circular(22),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.auto_stories_outlined, size: 56, color: purple),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Your library is waiting.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: navy, fontSize: 23, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Digital products you purchase from the Store will appear here.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: muted, height: 1.5),
+                    ),
+                    const SizedBox(height: 20),
+                    FilledButton.icon(
+                      style: FilledButton.styleFrom(backgroundColor: navy, foregroundColor: white),
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const StoreScreen()),
+                      ),
+                      icon: const Icon(Icons.storefront_outlined),
+                      label: const Text('Explore the Store'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1000),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'YOUR RESOURCE LIBRARY',
+                      style: TextStyle(color: purple, fontSize: 11, letterSpacing: 2, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Resources you own.',
+                      style: TextStyle(color: navy, fontSize: 29, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Your completed demo purchases are listed below. Select Download to open the corresponding PDF.',
+                      style: TextStyle(color: muted, height: 1.5),
+                    ),
+                    const SizedBox(height: 22),
+                    ...purchasedItems.map((item) {
+                      final productId = (item['productId'] ?? '').toString();
+                      final productName = (item['productName'] ?? 'Digital product').toString();
+                      final description = (item['description'] ?? '').toString();
+                      final orderId = (item['orderId'] ?? '').toString();
+                      final canDownload = _downloadFiles.containsKey(productId);
+                      final timestamp = item['createdAt'];
+                      final dateText = timestamp is Timestamp
+                          ? '${timestamp.toDate().day.toString().padLeft(2, '0')}/${timestamp.toDate().month.toString().padLeft(2, '0')}/${timestamp.toDate().year}'
+                          : 'Date unavailable';
+
+                      return Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.only(bottom: 14),
+                        padding: const EdgeInsets.all(18),
+                        decoration: BoxDecoration(
+                          color: white,
+                          borderRadius: BorderRadius.circular(18),
+                          border: Border.all(color: const Color(0xFFE5DFD5)),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 58,
+                              height: 68,
+                              decoration: BoxDecoration(color: lilac, borderRadius: BorderRadius.circular(12)),
+                              child: const Icon(Icons.picture_as_pdf_outlined, color: navy, size: 30),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(productName, style: const TextStyle(color: navy, fontSize: 17, fontWeight: FontWeight.bold)),
+                                  if (description.isNotEmpty) ...[
+                                    const SizedBox(height: 4),
+                                    Text(description, style: const TextStyle(color: muted, fontSize: 12, height: 1.4)),
+                                  ],
+                                  const SizedBox(height: 7),
+                                  Text('Purchased: $dateText', style: const TextStyle(color: muted, fontSize: 11)),
+                                  Text('Order: $orderId', style: const TextStyle(color: purple, fontSize: 10)),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            FilledButton.icon(
+                              style: FilledButton.styleFrom(backgroundColor: navy, foregroundColor: white),
+                              onPressed: canDownload ? () => _downloadProduct(context, productId) : null,
+                              icon: const Icon(Icons.download, size: 18),
+                              label: const Text('Download'),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Demo note: these sample PDF files are hosted with the website and their URLs are publicly accessible. This page checks your signed-in account’s Firestore purchase records before showing the download links; it is not production-grade file protection.',
+                      style: TextStyle(color: muted, fontSize: 11, height: 1.5),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
@@ -1414,9 +2598,26 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _addressController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _shippingAddressController = TextEditingController();
+  final _cityController = TextEditingController();
+  final _stateController = TextEditingController();
+  final _postcodeController = TextEditingController();
 
   String _paymentMethod = 'Online banking (demo)';
   bool _orderCompleted = false;
+  bool _isPlacingOrder = false;
+  String? _orderId;
+  double _completedTotal = 0;
+
+  bool get _isPhysicalCart => sampleCart.isNotEmpty &&
+      sampleCart.every((line) => line.product.type == 'PHYSICAL PRODUCT');
+
+  bool get _isDigitalCart => sampleCart.isNotEmpty &&
+      sampleCart.every((line) => line.product.type != 'PHYSICAL PRODUCT');
+
+  bool get _hasMixedCart => sampleCart.isNotEmpty &&
+      !_isPhysicalCart && !_isDigitalCart;
 
   double get subtotal => sampleCart.fold<double>(
     0,
@@ -1428,10 +2629,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     _nameController.dispose();
     _emailController.dispose();
     _addressController.dispose();
+    _phoneController.dispose();
+    _shippingAddressController.dispose();
+    _cityController.dispose();
+    _stateController.dispose();
+    _postcodeController.dispose();
     super.dispose();
   }
 
-  void _placeOrder() {
+  Future<void> _placeOrder() async {
     if (!_formKey.currentState!.validate()) return;
 
     if (sampleCart.isEmpty) {
@@ -1443,9 +2649,100 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       return;
     }
 
-    setState(() {
-      _orderCompleted = true;
-    });
+    if (_hasMixedCart) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Please checkout digital and physical products separately.',
+          ),
+        ),
+      );
+      return;
+    }
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please sign in before completing your purchase.'),
+        ),
+      );
+      return;
+    }
+
+    setState(() => _isPlacingOrder = true);
+
+    try {
+      final orderCollection = _isPhysicalCart
+          ? 'physicalOrders'
+          : 'digitalOrders';
+      final orderRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection(orderCollection)
+          .doc();
+
+      final orderTotal = subtotal;
+      final orderItems = sampleCart.map((line) {
+        return <String, dynamic>{
+          'productId': line.product.id,
+          'productName': line.product.name,
+          'description': line.product.description,
+          'productType': line.product.type,
+          'unitPrice': line.product.price,
+          'quantity': line.quantity,
+          'lineTotal': line.product.price * line.quantity,
+          'imageUrl': line.product.imageUrl,
+        };
+      }).toList();
+
+      await orderRef.set({
+        'orderId': orderRef.id,
+        'userId': user.uid,
+        'customerName': _nameController.text.trim(),
+        'customerEmail': _emailController.text.trim(),
+        'billingAddress': _addressController.text.trim(),
+        if (_isPhysicalCart) ...{
+          'customerPhone': _phoneController.text.trim(),
+          'shippingAddress': {
+            'address': _shippingAddressController.text.trim(),
+            'city': _cityController.text.trim(),
+            'state': _stateController.text.trim(),
+            'postcode': _postcodeController.text.trim(),
+            'country': 'Malaysia',
+          },
+        },
+        'items': orderItems,
+        'itemCount': sampleCart.fold<int>(
+          0,
+              (total, line) => total + line.quantity,
+        ),
+        'subtotal': orderTotal,
+        'total': orderTotal,
+        'currency': 'MYR',
+        'paymentMethod': _paymentMethod,
+        'paymentStatus': 'demo_completed',
+        'orderStatus': _isPhysicalCart ? 'processing' : 'completed',
+        'orderType': _isPhysicalCart ? 'physical' : 'digital',
+        if (_isPhysicalCart) 'deliveryStatus': 'processing',
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+      if (!mounted) return;
+
+      setState(() {
+        _completedTotal = orderTotal;
+        _orderId = orderRef.id;
+        _orderCompleted = true;
+        _isPlacingOrder = false;
+      });
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _isPlacingOrder = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Unable to save your order: $error')),
+      );
+    }
   }
 
   @override
@@ -1479,8 +2776,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     size: 72,
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    'Thank you for your order!',
+                  Text(
+                    _isPhysicalCart
+                        ? 'Your physical order is confirmed!'
+                        : 'Thank you for your order!',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: navy,
@@ -1489,15 +2788,29 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  const Text(
-                    'Your demo order has been recorded for this session. '
-                        'No payment was taken.',
+                  Text(
+                    _isPhysicalCart
+                        ? 'Your physical order has been saved. Its current status is Processing. '
+                        'No real payment was processed.'
+                        : 'Your demo order has been saved to your account. '
+                        'No real payment was processed.',
                     textAlign: TextAlign.center,
                     style: TextStyle(color: muted, height: 1.6),
                   ),
+                  if (_orderId != null) ...[
+                    const SizedBox(height: 12),
+                    Text(
+                      'Order reference: $_orderId',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: purple,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 20),
                   Text(
-                    'Order total: RM ${subtotal.toStringAsFixed(2)}',
+                    'Order total: RM ${_completedTotal.toStringAsFixed(2)}',
                     style: const TextStyle(
                       color: navy,
                       fontSize: 18,
@@ -1551,8 +2864,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    'Enter your details and review your order below.',
+                  Text(
+                    _isPhysicalCart
+                        ? 'Enter your details and delivery address below.'
+                        : 'Enter your details and review your order below.',
                     style: TextStyle(color: muted, height: 1.6),
                   ),
                   const SizedBox(height: 24),
@@ -1626,6 +2941,108 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             return null;
                           },
                         ),
+                        if (_isPhysicalCart) ...[
+                          const SizedBox(height: 24),
+                          const Divider(),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'DELIVERY DETAILS',
+                            style: TextStyle(
+                              color: navy,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: _phoneController,
+                            keyboardType: TextInputType.phone,
+                            decoration: const InputDecoration(
+                              labelText: 'Contact number',
+                              border: OutlineInputBorder(),
+                              prefixIcon: Icon(Icons.phone_outlined),
+                            ),
+                            validator: (value) {
+                              if (_isPhysicalCart &&
+                                  (value == null ||
+                                      !RegExp(r'^[0-9+()\-\s]{7,20}$')
+                                          .hasMatch(value.trim()))) {
+                                return 'Enter a valid contact number.';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: _shippingAddressController,
+                            maxLines: 2,
+                            decoration: const InputDecoration(
+                              labelText: 'Delivery street address',
+                              border: OutlineInputBorder(),
+                              prefixIcon: Icon(Icons.local_shipping_outlined),
+                            ),
+                            validator: (value) {
+                              if (_isPhysicalCart &&
+                                  (value == null || value.trim().isEmpty)) {
+                                return 'Please enter the delivery address.';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: _cityController,
+                            decoration: const InputDecoration(
+                              labelText: 'City',
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (_isPhysicalCart &&
+                                  (value == null || value.trim().isEmpty)) {
+                                return 'Please enter the city.';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: _stateController,
+                            decoration: const InputDecoration(
+                              labelText: 'State',
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (_isPhysicalCart &&
+                                  (value == null || value.trim().isEmpty)) {
+                                return 'Please enter the state.';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: _postcodeController,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              labelText: 'Postcode',
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (_isPhysicalCart &&
+                                  (value == null ||
+                                      !RegExp(r'^\d{5}$')
+                                          .hasMatch(value.trim()))) {
+                                return 'Enter a valid 5-digit postcode.';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Delivery is currently a coursework simulation. No courier booking is made.',
+                            style: TextStyle(color: muted, fontSize: 12),
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -1778,11 +3195,26 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 vertical: 18,
                               ),
                             ),
-                            onPressed: sampleCart.isEmpty
+                            onPressed: sampleCart.isEmpty || _isPlacingOrder
                                 ? null
                                 : _placeOrder,
-                            icon: const Icon(Icons.lock_outline),
-                            label: const Text('Place demo order'),
+                            icon: _isPlacingOrder
+                                ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: white,
+                              ),
+                            )
+                                : const Icon(Icons.lock_outline),
+                            label: Text(
+                              _isPlacingOrder
+                                  ? 'Saving order...'
+                                  : _isPhysicalCart
+                                  ? 'Place physical order'
+                                  : 'Place demo order',
+                            ),
                           ),
                         ),
                       ],
@@ -2106,6 +3538,7 @@ class _CartScreenState extends State<CartScreen> {
 // ============================================================
 
 class EmployerRecord {
+  final String id;
   String name;
   String email;
   String role;
@@ -2113,12 +3546,27 @@ class EmployerRecord {
   double progress;
 
   EmployerRecord({
+    required this.id,
     required this.name,
     required this.email,
     required this.role,
     this.course = 'Not assigned',
     this.progress = 0.0,
   });
+
+  factory EmployerRecord.fromDocument(
+      QueryDocumentSnapshot<Map<String, dynamic>> document,
+      ) {
+    final data = document.data();
+    return EmployerRecord(
+      id: document.id,
+      name: data['name'] as String? ?? '',
+      email: data['email'] as String? ?? '',
+      role: data['role'] as String? ?? '',
+      course: data['course'] as String? ?? 'Not assigned',
+      progress: (data['progress'] as num?)?.toDouble() ?? 0.0,
+    );
+  }
 }
 
 class EmployerPortalScreen extends StatefulWidget {
@@ -2137,11 +3585,9 @@ class _EmployerPortalScreenState extends State<EmployerPortalScreen> {
   String organizationName = 'Alchemy Studio';
   String selectedCourse = 'Emotional Intelligence';
   final Set<int> selectedEmployees = {0};
-  final List<EmployerRecord> employees = [
-    EmployerRecord(name: 'Avery Chen', email: 'avery.chen@example.com', role: 'Team Lead', course: 'Emotional Intelligence', progress: 0.72),
-    EmployerRecord(name: 'Jordan Patel', email: 'jordan.patel@example.com', role: 'People & Culture', course: 'Leadership Essentials', progress: 0.45),
-    EmployerRecord(name: 'Sam Rivera', email: 'sam.rivera@example.com', role: 'Project Manager', progress: 0.18),
-  ];
+  final List<EmployerRecord> employees = [];
+  bool employeesLoading = true;
+  bool employeesSaving = false;
 
   final List<String> courses = const [
     'Emotional Intelligence',
@@ -2149,6 +3595,111 @@ class _EmployerPortalScreenState extends State<EmployerPortalScreen> {
     'Mindful Communication',
     'Building Team Trust',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadOrganization();
+    _loadEmployees();
+  }
+
+  CollectionReference<Map<String, dynamic>> _employeeCollection(String uid) {
+    return FirebaseFirestore.instance
+        .collection('organizations')
+        .doc(uid)
+        .collection('employees');
+  }
+
+  Future<void> _loadEmployees() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      if (mounted) setState(() => employeesLoading = false);
+      return;
+    }
+
+    try {
+      final collection = _employeeCollection(user.uid);
+      var snapshot = await collection.get();
+
+      // Keep the three demonstration employees, but seed them only once.
+      if (snapshot.docs.isEmpty) {
+        final sampleEmployees = [
+          {
+            'name': 'Avery Chen',
+            'email': 'avery.chen@example.com',
+            'role': 'Team Lead',
+            'course': 'Emotional Intelligence',
+            'progress': 0.72,
+          },
+          {
+            'name': 'Jordan Patel',
+            'email': 'jordan.patel@example.com',
+            'role': 'People & Culture',
+            'course': 'Leadership Essentials',
+            'progress': 0.45,
+          },
+          {
+            'name': 'Sam Rivera',
+            'email': 'sam.rivera@example.com',
+            'role': 'Project Manager',
+            'course': 'Not assigned',
+            'progress': 0.18,
+          },
+        ];
+
+        final batch = FirebaseFirestore.instance.batch();
+        for (final employee in sampleEmployees) {
+          final ref = collection.doc();
+          batch.set(ref, {
+            ...employee,
+            'createdAt': FieldValue.serverTimestamp(),
+          });
+        }
+        await batch.commit();
+        snapshot = await collection.get();
+      }
+
+      if (!mounted) return;
+      setState(() {
+        employees
+          ..clear()
+          ..addAll(snapshot.docs.map(EmployerRecord.fromDocument));
+        selectedEmployees
+          ..clear()
+          ..add(0);
+        employeesLoading = false;
+      });
+    } catch (e) {
+      debugPrint('Error loading employees: $e');
+      if (!mounted) return;
+      setState(() => employeesLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unable to load team members. Check Firestore permissions.')),
+      );
+    }
+  }
+
+  Future<void> _loadOrganization() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('organizations')
+          .doc(user.uid)
+          .get();
+
+      if (doc.exists && mounted) {
+        final data = doc.data()!;
+        setState(() {
+          organizationName = data['name'] as String? ?? 'Alchemy Studio';
+          organizationController.text = organizationName;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading organization: $e');
+    }
+  }
 
   @override
   void dispose() {
@@ -2176,6 +3727,11 @@ class _EmployerPortalScreenState extends State<EmployerPortalScreen> {
             tooltip: 'Return home',
             onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
             icon: const Icon(Icons.home_outlined),
+          ),
+          TextButton.icon(
+            onPressed: () => confirmAndSignOut(context),
+            icon: const Icon(Icons.logout),
+            label: const Text('Sign out'),
           ),
           const SizedBox(width: 10),
         ],
@@ -2343,7 +3899,16 @@ class _EmployerPortalScreenState extends State<EmployerPortalScreen> {
       const SizedBox(height: 8),
       const Text('Select team members to assign a learning pathway.', style: TextStyle(color: muted, fontSize: 13, height: 1.5)),
       const SizedBox(height: 14),
-      if (employees.isEmpty) const Padding(padding: EdgeInsets.all(18), child: Text('No employees yet. Add your first team member to get started.')),
+      if (employeesLoading)
+        const Padding(
+          padding: EdgeInsets.all(18),
+          child: Center(child: CircularProgressIndicator()),
+        ),
+      if (!employeesLoading && employees.isEmpty)
+        const Padding(
+          padding: EdgeInsets.all(18),
+          child: Text('No employees yet. Add your first team member to get started.'),
+        ),
       ...employees.asMap().entries.map((entry) {
         final index = entry.key;
         final employee = entry.value;
@@ -2389,16 +3954,154 @@ class _EmployerPortalScreenState extends State<EmployerPortalScreen> {
       ),
       const SizedBox(height: 12),
       SizedBox(width: double.infinity, child: FilledButton.icon(
-        onPressed: selectedEmployees.isEmpty ? null : _assignCourse,
+        onPressed: selectedEmployees.isEmpty || employeesSaving ? null : _assignCourse,
         style: FilledButton.styleFrom(backgroundColor: navy, padding: const EdgeInsets.symmetric(vertical: 16)),
         icon: const Icon(Icons.send_outlined),
-        label: Text('Assign to ${selectedEmployees.length} selected'),
+        label: Text(employeesSaving
+            ? 'Saving assignments...'
+            : 'Assign to ${selectedEmployees.length} selected'),
       )),
       const SizedBox(height: 18),
       const Divider(),
       const SizedBox(height: 8),
-      const Row(crossAxisAlignment: CrossAxisAlignment.start, children: [Icon(Icons.visibility_outlined, color: purple), SizedBox(width: 10), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Progress at a glance', style: TextStyle(color: navy, fontWeight: FontWeight.bold)), SizedBox(height: 4), Text('Use the progress bars in each employee profile to review course completion.', style: TextStyle(color: muted, fontSize: 12, height: 1.5))]))]),
+      const Row(crossAxisAlignment: CrossAxisAlignment.start, children: [Icon(Icons.visibility_outlined, color: purple), SizedBox(width: 10), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Progress at a glance', style: TextStyle(color: navy, fontWeight: FontWeight.bold)), SizedBox(height: 4), Text('Open a progress report to review the current recorded course progress for your team.', style: TextStyle(color: muted, fontSize: 12, height: 1.5))]))]),
+      const SizedBox(height: 14),
+      SizedBox(
+        width: double.infinity,
+        child: OutlinedButton.icon(
+          onPressed: employeesLoading ? null : _showProgressReports,
+          icon: const Icon(Icons.assessment_outlined),
+          label: const Text('View Progress Reports'),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: navy,
+            side: const BorderSide(color: purple),
+            padding: const EdgeInsets.symmetric(vertical: 15),
+          ),
+        ),
+      ),
     ]));
+  }
+
+  Future<void> _showProgressReports() async {
+    final assigned = employees.where((employee) => employee.course != 'Not assigned').length;
+    final completed = employees.where((employee) => employee.progress >= 1.0).length;
+    final average = employees.isEmpty
+        ? 0.0
+        : employees.fold<double>(0, (total, employee) => total + employee.progress) / employees.length;
+
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Employee Progress Reports'),
+        content: SizedBox(
+          width: 560,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(organizationName, style: const TextStyle(color: navy, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                const Text(
+                  'Organisation learning overview based on the progress values currently saved in the Employer Portal.',
+                  style: TextStyle(color: muted, fontSize: 12, height: 1.4),
+                ),
+                const SizedBox(height: 16),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    _reportSummaryChip('Employees', '${employees.length}'),
+                    _reportSummaryChip('Assigned courses', '$assigned'),
+                    _reportSummaryChip('Completed', '$completed'),
+                    _reportSummaryChip('Average progress', '${(average * 100).round()}%'),
+                  ],
+                ),
+                const SizedBox(height: 18),
+                if (employees.isEmpty)
+                  const Text('No employee records are available yet.')
+                else
+                  ...employees.map((employee) {
+                    final percent = (employee.progress.clamp(0.0, 1.0) * 100).round();
+                    return Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: oat,
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(employee.name, style: const TextStyle(color: navy, fontWeight: FontWeight.bold)),
+                                    const SizedBox(height: 2),
+                                    Text(employee.email, style: const TextStyle(color: muted, fontSize: 11)),
+                                  ],
+                                ),
+                              ),
+                              Text('$percent%', style: const TextStyle(color: navy, fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Text('Course: ${employee.course}', style: const TextStyle(color: ink, fontSize: 12)),
+                          const SizedBox(height: 7),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: LinearProgressIndicator(
+                              value: employee.progress.clamp(0.0, 1.0),
+                              minHeight: 7,
+                              backgroundColor: const Color(0xFFE2DED6),
+                              color: purple,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            employee.course == 'Not assigned'
+                                ? 'No course assigned'
+                                : (employee.progress >= 1.0 ? 'Completed' : 'In progress'),
+                            style: const TextStyle(color: muted, fontSize: 10),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _reportSummaryChip(String label, String value) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 9),
+      decoration: BoxDecoration(
+        color: lilac,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(value, style: const TextStyle(color: navy, fontWeight: FontWeight.bold, fontSize: 16)),
+          Text(label, style: const TextStyle(color: muted, fontSize: 10)),
+        ],
+      ),
+    );
   }
 
   Widget _portalPanel({required Widget child, Color color = white}) {
@@ -2409,27 +4112,97 @@ class _EmployerPortalScreenState extends State<EmployerPortalScreen> {
     return Container(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(18)), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Icon(icon, color: navy, size: 22), const SizedBox(height: 15), Text(value, style: const TextStyle(color: navy, fontSize: 27, fontWeight: FontWeight.w800)), const SizedBox(height: 4), Text(label, style: const TextStyle(color: navy, fontSize: 9, letterSpacing: 1, fontWeight: FontWeight.bold))]));
   }
 
-  void _saveOrganization() {
+  Future<void> _saveOrganization() async {
     final value = organizationController.text.trim();
+
     if (value.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter an organisation name.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter an organisation name.')),
+      );
       return;
     }
-    setState(() => organizationName = value);
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Organisation workspace updated.')));
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please sign in again.')),
+      );
+      return;
+    }
+
+    try {
+      final organizationRef = FirebaseFirestore.instance
+          .collection('organizations')
+          .doc(user.uid);
+      final existingDocument = await organizationRef.get();
+
+      await organizationRef.set({
+        'name': value,
+        'ownerUid': user.uid,
+        'updatedAt': FieldValue.serverTimestamp(),
+        if (!existingDocument.exists)
+          'createdAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+
+      if (!mounted) return;
+      setState(() => organizationName = value);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Organisation workspace saved successfully.'),
+        ),
+      );
+    } catch (e) {
+      debugPrint('Error saving organization: $e');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Unable to save organisation. Please try again.'),
+        ),
+      );
+    }
   }
 
-  void _assignCourse() {
-    if (selectedEmployees.isEmpty) return;
-    setState(() {
-      for (final index in selectedEmployees) {
-        if (index >= 0 && index < employees.length) {
-          employees[index].course = selectedCourse;
-          if (employees[index].progress == 0) employees[index].progress = 0.05;
-        }
+  Future<void> _assignCourse() async {
+    if (selectedEmployees.isEmpty || employeesSaving) return;
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final indexes = selectedEmployees
+        .where((index) => index >= 0 && index < employees.length)
+        .toList();
+    if (indexes.isEmpty) return;
+
+    setState(() => employeesSaving = true);
+    try {
+      final batch = FirebaseFirestore.instance.batch();
+      for (final index in indexes) {
+        final employee = employees[index];
+        batch.update(_employeeCollection(user.uid).doc(employee.id), {
+          'course': selectedCourse,
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
       }
-    });
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$selectedCourse assigned to ${selectedEmployees.length} team member(s).')));
+      await batch.commit();
+
+      if (!mounted) return;
+      setState(() {
+        for (final index in indexes) {
+          employees[index].course = selectedCourse;
+        }
+        employeesSaving = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('$selectedCourse assigned to ${indexes.length} team member(s).')),
+      );
+    } catch (e) {
+      debugPrint('Error assigning course: $e');
+      if (!mounted) return;
+      setState(() => employeesSaving = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unable to save course assignments. Check Firestore permissions.')),
+      );
+    }
   }
 
   Future<void> _showAddEmployeeDialog() async {
@@ -2451,13 +4224,42 @@ class _EmployerPortalScreenState extends State<EmployerPortalScreen> {
       ),
     );
     if (added == true && mounted) {
-      setState(() {
-        employees.add(EmployerRecord(name: employeeNameController.text.trim(), email: employeeEmailController.text.trim(), role: employeeRoleController.text.trim()));
-        selectedEmployees
-          ..clear()
-          ..add(employees.length - 1);
-      });
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Team member added to this prototype.')));
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      try {
+        final newEmployee = {
+          'name': employeeNameController.text.trim(),
+          'email': employeeEmailController.text.trim(),
+          'role': employeeRoleController.text.trim(),
+          'course': 'Not assigned',
+          'progress': 0.0,
+          'createdAt': FieldValue.serverTimestamp(),
+        };
+        final document = await _employeeCollection(user.uid).add(newEmployee);
+        if (!mounted) return;
+
+        setState(() {
+          employees.add(EmployerRecord(
+            id: document.id,
+            name: newEmployee['name'] as String,
+            email: newEmployee['email'] as String,
+            role: newEmployee['role'] as String,
+          ));
+          selectedEmployees
+            ..clear()
+            ..add(employees.length - 1);
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Team member saved successfully.')),
+        );
+      } catch (e) {
+        debugPrint('Error adding employee: $e');
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Unable to add employee. Check Firestore permissions.')),
+        );
+      }
     }
   }
 }
@@ -2513,15 +4315,20 @@ class _ContentScreenState extends State<ContentScreen> {
           String destination;
 
           switch (role) {
+            case 'Individual':
             case 'Learner':
-              destination = 'Upskilling';
+              destination = 'Learning Hub';
               break;
+
             case 'Employer':
               destination = 'Employers';
               break;
+
             case 'Admin':
+            case 'Super Admin':
               destination = 'Admin Portal';
               break;
+
             default:
               destination = 'Home';
           }
@@ -2556,11 +4363,19 @@ class _ContentScreenState extends State<ContentScreen> {
       );
     }
 
-    if (widget.title == 'Upskilling') {
+    // Public Upskilling is a sample overview page. The personal Learning Hub
+    // is opened only after a learner signs in.
+    if (widget.title == 'Learning Hub') {
       return const LearningHubScreen();
     }
     if (widget.title == 'Store') {
       return const StoreScreen();
+    }
+    if (widget.title == 'My Digital Products') {
+      return const MyDigitalProductsScreen();
+    }
+    if (widget.title == 'My Physical Orders') {
+      return const MyPhysicalOrdersScreen();
     }
     if (widget.title == 'Cart') {
       return const CartScreen();
@@ -2978,6 +4793,20 @@ class ServicesScreen extends StatelessWidget {
         }),
         const SizedBox(height: 30),
         Container(width: double.infinity, padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: lilac, borderRadius: BorderRadius.circular(22)), child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('A tailored approach', style: TextStyle(color: navy, fontSize: 22, fontWeight: FontWeight.bold)), SizedBox(height: 8), Text('Programmes can be shaped around your team’s goals, context and desired outcomes. Send an enquiry and tell us what you want to change.', style: TextStyle(color: ink, height: 1.6))])),
+        const SizedBox(height: 18),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: FilledButton.icon(
+            onPressed: () => _contact(context, 'Customized corporate programme'),
+            icon: const Icon(Icons.business_outlined),
+            label: const Text('Submit corporate enquiry'),
+            style: FilledButton.styleFrom(
+              backgroundColor: navy,
+              foregroundColor: white,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            ),
+          ),
+        ),
       ])))),
     );
   }
@@ -2986,6 +4815,7 @@ class ServicesScreen extends StatelessWidget {
 class ServiceEnquiryScreen extends StatefulWidget {
   final String service;
   const ServiceEnquiryScreen({super.key, required this.service});
+
   @override
   State<ServiceEnquiryScreen> createState() => _ServiceEnquiryScreenState();
 }
@@ -2995,15 +4825,95 @@ class _ServiceEnquiryScreenState extends State<ServiceEnquiryScreen> {
   final _name = TextEditingController();
   final _email = TextEditingController();
   final _organisation = TextEditingController();
-  final _message = TextEditingController();
+  final _phone = TextEditingController();
+  final _employeeCount = TextEditingController();
+  final _requirements = TextEditingController();
+  final _comments = TextEditingController();
+
+  static const _programmes = [
+    'Emotional Intelligence',
+    'Leadership Development',
+    'Communication',
+    'Team Engagement',
+    'Workplace Well-being',
+    'Customized Programme',
+  ];
+
+  String _selectedProgramme = 'Customized Programme';
+  bool _isSubmitting = false;
 
   @override
   void dispose() {
     _name.dispose();
     _email.dispose();
     _organisation.dispose();
-    _message.dispose();
+    _phone.dispose();
+    _employeeCount.dispose();
+    _requirements.dispose();
+    _comments.dispose();
     super.dispose();
+  }
+
+  Future<void> _submitEnquiry() async {
+    if (!_key.currentState!.validate() || _isSubmitting) return;
+
+    setState(() => _isSubmitting = true);
+
+    try {
+      await FirebaseFirestore.instance.collection('corporateEnquiries').add({
+        'organizationName': _organisation.text.trim(),
+        'contactName': _name.text.trim(),
+        'email': _email.text.trim(),
+        'phone': _phone.text.trim(),
+        'employeeCount': int.parse(_employeeCount.text.trim()),
+        'preferredProgramme': _selectedProgramme,
+        'trainingRequirements': _requirements.text.trim(),
+        'additionalComments': _comments.text.trim(),
+        'status': 'Pending',
+        'proposedProgramme': '',
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      if (!mounted) return;
+      await showDialog<void>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('Enquiry submitted'),
+          content: const Text(
+            'Thank you. Your corporate enquiry has been submitted successfully. '
+                'Our team can review the details and prepare a suitable programme.',
+          ),
+          actions: [
+            FilledButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Done'),
+            ),
+          ],
+        ),
+      );
+      if (mounted) Navigator.pop(context);
+    } catch (e) {
+      debugPrint('Corporate enquiry submission failed: $e');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Unable to submit your enquiry. Please check your connection and try again.',
+          ),
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
+  }
+
+  InputDecoration _fieldDecoration(String label, {String? hint}) {
+    return InputDecoration(
+      labelText: label,
+      hintText: hint,
+      border: const OutlineInputBorder(),
+    );
   }
 
   @override
@@ -3013,7 +4923,7 @@ class _ServiceEnquiryScreenState extends State<ServiceEnquiryScreen> {
       appBar: AppBar(
         backgroundColor: oat,
         foregroundColor: navy,
-        title: const Text('Service enquiry'),
+        title: const Text('Corporate enquiry'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -3031,61 +4941,130 @@ class _ServiceEnquiryScreenState extends State<ServiceEnquiryScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const _Eyebrow('LET’S TALK'),
+                  const _Eyebrow('LET’S BUILD A PROGRAMME'),
                   const SizedBox(height: 12),
-                  Text(widget.service, style: const TextStyle(color: navy, fontSize: 30, fontWeight: FontWeight.bold)),
+                  Text(
+                    widget.service,
+                    style: const TextStyle(
+                      color: navy,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const SizedBox(height: 10),
-                  const Text('Share a few details and we’ll have a clearer starting point for your enquiry.', style: TextStyle(color: muted, height: 1.6)),
+                  const Text(
+                    'Tell us about your organisation and training goals. '
+                        'We will use these details to understand your needs and shape a suitable programme.',
+                    style: TextStyle(color: muted, height: 1.6),
+                  ),
                   const SizedBox(height: 24),
                   TextFormField(
+                    controller: _organisation,
+                    decoration: _fieldDecoration('Organisation name'),
+                    validator: (v) => v == null || v.trim().isEmpty
+                        ? 'Enter your organisation name'
+                        : null,
+                  ),
+                  const SizedBox(height: 14),
+                  TextFormField(
                     controller: _name,
-                    decoration: const InputDecoration(labelText: 'Your name', border: OutlineInputBorder()),
-                    validator: (v) => v == null || v.trim().isEmpty ? 'Please enter your name' : null,
+                    decoration: _fieldDecoration('Contact person name'),
+                    validator: (v) => v == null || v.trim().isEmpty
+                        ? 'Enter the contact person’s name'
+                        : null,
                   ),
                   const SizedBox(height: 14),
                   TextFormField(
                     controller: _email,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(labelText: 'Email address', border: OutlineInputBorder()),
-                    validator: (v) => v == null || !RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(v.trim()) ? 'Enter a valid email address' : null,
+                    decoration: _fieldDecoration('Business email'),
+                    validator: (v) => v == null ||
+                        !RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
+                            .hasMatch(v.trim())
+                        ? 'Enter a valid email address'
+                        : null,
                   ),
                   const SizedBox(height: 14),
                   TextFormField(
-                    controller: _organisation,
-                    decoration: const InputDecoration(labelText: 'Organisation (optional)', border: OutlineInputBorder()),
+                    controller: _phone,
+                    keyboardType: TextInputType.phone,
+                    decoration: _fieldDecoration('Phone number'),
+                    validator: (v) => v == null || v.trim().isEmpty
+                        ? 'Enter a contact phone number'
+                        : null,
                   ),
                   const SizedBox(height: 14),
                   TextFormField(
-                    controller: _message,
+                    controller: _employeeCount,
+                    keyboardType: TextInputType.number,
+                    decoration: _fieldDecoration(
+                      'Number of employees',
+                      hint: 'e.g. 25',
+                    ),
+                    validator: (v) {
+                      final count = int.tryParse((v ?? '').trim());
+                      if (count == null || count < 1) {
+                        return 'Enter a valid number of employees';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 14),
+                  DropdownButtonFormField<String>(
+                    value: _selectedProgramme,
+                    decoration: _fieldDecoration('Preferred training programme'),
+                    items: _programmes
+                        .map((programme) => DropdownMenuItem(
+                      value: programme,
+                      child: Text(programme),
+                    ))
+                        .toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() => _selectedProgramme = value);
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 14),
+                  TextFormField(
+                    controller: _requirements,
                     maxLines: 4,
-                    decoration: const InputDecoration(labelText: 'What would you like support with?', border: OutlineInputBorder()),
-                    validator: (v) => v == null || v.trim().isEmpty ? 'Please add a short message' : null,
+                    decoration: _fieldDecoration(
+                      'Training requirements',
+                      hint: 'Describe the skills, challenges or outcomes you want to focus on.',
+                    ),
+                    validator: (v) => v == null || v.trim().isEmpty
+                        ? 'Describe your training requirements'
+                        : null,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 14),
+                  TextFormField(
+                    controller: _comments,
+                    maxLines: 3,
+                    decoration: _fieldDecoration(
+                      'Additional comments (optional)',
+                    ),
+                  ),
+                  const SizedBox(height: 22),
                   SizedBox(
                     width: double.infinity,
-                    child: FilledButton(
-                      onPressed: () {
-                        if (_key.currentState!.validate()) {
-                          showDialog<void>(
-                            context: context,
-                            builder: (dialogContext) => AlertDialog(
-                              title: const Text('Enquiry preview'),
-                              content: const Text('Your form is valid. This prototype does not send enquiries to a server yet.'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(dialogContext);
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('Done'),
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      },
-                      child: const Text('Review enquiry'),
+                    child: FilledButton.icon(
+                      onPressed: _isSubmitting ? null : _submitEnquiry,
+                      icon: _isSubmitting
+                          ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                          : const Icon(Icons.send_outlined),
+                      label: Text(
+                        _isSubmitting ? 'Submitting...' : 'Submit corporate enquiry',
+                      ),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: navy,
+                        foregroundColor: white,
+                        padding: const EdgeInsets.all(18),
+                      ),
                     ),
                   ),
                 ],

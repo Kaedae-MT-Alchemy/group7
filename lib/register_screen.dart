@@ -21,7 +21,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  String _selectedRole = 'Learner';
+  String _selectedRole = 'Individual';
   final AuthService _authService = AuthService();
 
   bool _hidePassword = true;
@@ -166,16 +166,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         items: const [
                           DropdownMenuItem(
-                            value: 'Learner',
-                            child: Text('Learner'),
+                            value: 'Individual',
+                            child: Text('Individual'),
                           ),
                           DropdownMenuItem(
                             value: 'Employer',
                             child: Text('Employer'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'Admin',
-                            child: Text('Admin'),
                           ),
                         ],
                         onChanged: (value) {
