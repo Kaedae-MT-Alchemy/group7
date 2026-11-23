@@ -1,3 +1,6 @@
+live link: 
+https://kaedae-mt-alchemy.github.io/group7-toshani/ 
+
 app screenshots: 
 
 <img width="1029" height="554" alt="image" src="https://github.com/user-attachments/assets/026ea5bc-bb09-4bed-9080-4e6f0e86ac48" />
